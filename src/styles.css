@@ -310,6 +310,7 @@ html.cursor-out .cursor-dot, html.cursor-out .cursor-ring { opacity: 0; }
 .vis { position: relative; margin: 0 24px; height: 250px; border-radius: 18px; background: var(--bg); border: 1px solid var(--line); overflow: hidden; }
 /* body fills the card so the stack + button always sit on the same baseline in both cards */
 .pcard-body { position: relative; padding: 26px 24px 28px; flex: 1; display: flex; flex-direction: column; align-items: flex-start; }
+.pcard-actions { display: flex; flex-wrap: wrap; gap: 10px; }
 .pcard h3 { font-size: clamp(36px, 4vw, 56px); }
 .clone { font-family: var(--mono); font-size: 13px; font-weight: 400; color: var(--muted); letter-spacing: 0; vertical-align: super; }
 .features { display: flex; flex-wrap: wrap; gap: 6px; margin: 14px 0; }

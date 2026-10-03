@@ -94,7 +94,8 @@ export const content = {
     index: '03',
     title: 'Selected projects',
     sub: 'Personal projects built from scratch — some modelled on real products.',
-    view: 'View on GitHub',
+    view: 'GitHub',
+    live: 'Live demo',
     vis: { stage: 'STAGE', car: 'Car', ship: 'shipping', baku: 'Baku', less: 'Remove one', more: 'Add one', freeShip: 'Free delivery ✓', toFree: 'to free delivery', ingredients: 'ingredients' },
     items: [
       {
@@ -117,6 +118,7 @@ export const content = {
         desc: 'A car import and shipping site modelled on carify-global.com: car catalog, shipping cost calculator, shipment tracking with Google Maps, wishlist, authentication and multi-language support.',
         stack: ['React', 'React Router', 'i18next', 'Axios', 'Google Maps API'],
         url: 'https://github.com/saidmuradkhan/Carify',
+        live: 'https://carify.saidmuradkhan.dev',
         features: ['Cost calculator', 'Live tracking', 'i18n'],
       },
       {
@@ -127,6 +129,7 @@ export const content = {
         desc: 'A responsive electronics store for a fictional Baku shop: search, category filters and sorting synced to the URL, product pages with specs and related items, a persistent cart drawer and wishlist, and a validated checkout flow with order confirmation.',
         stack: ['React', 'React Router', 'Context + useReducer', 'Tailwind CSS', 'localStorage'],
         url: 'https://github.com/saidmuradkhan/ecommerce',
+        live: 'https://ecommerce.saidmuradkhan.dev',
         features: ['Persistent cart', 'URL-synced filters', 'Form validation'],
       },
       {
@@ -137,6 +140,7 @@ export const content = {
         desc: 'A cocktail discovery app with a dark, amber-lit lounge design, powered by TheCocktailDB API: debounced search by name or ingredient, category and A–Z browsing, full recipe pages with ingredient thumbnails, favorites and a validated reservation form.',
         stack: ['React', 'React Router', 'Axios', 'Tailwind CSS', 'REST API'],
         url: 'https://github.com/saidmuradkhan/cocktail',
+        live: 'https://cocktail.saidmuradkhan.dev',
         features: ['Live search', 'Favorites', 'Public API'],
       },
     ],

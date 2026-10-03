@@ -125,7 +125,7 @@ function Mixer({ l }) {
 
 const visuals = { seatmap: SeatMap, route: RouteMap, cart: MiniCart, mixer: Mixer }
 
-function Card({ p, i, view, l }) {
+function Card({ p, i, view, live, l }) {
   const ref = useRef(null)
   const onMove = (e) => {
     if (isTouch()) return
@@ -155,9 +155,16 @@ function Card({ p, i, view, l }) {
         <div className="stack">
           {p.stack.map((s) => <span key={s} className="mono">{s}</span>)}
         </div>
-        <a href={p.url} target="_blank" rel="noreferrer" className="btn btn-fill pcard-link" data-cursor="↗">
-          {view} <span aria-hidden="true">↗</span>
-        </a>
+        <div className="pcard-actions">
+          {p.live && (
+            <a href={p.live} target="_blank" rel="noreferrer" className="btn btn-fill pcard-link" data-cursor="↗">
+              {live} <span aria-hidden="true">↗</span>
+            </a>
+          )}
+          <a href={p.url} target="_blank" rel="noreferrer" className={`btn pcard-link${p.live ? '' : ' btn-fill'}`} data-cursor="↗">
+            {view} <span aria-hidden="true">↗</span>
+          </a>
+        </div>
       </div>
     </article>
   )
@@ -169,7 +176,7 @@ export default function Projects({ t }) {
       <div className="wrap">
         <SectionHead index={t.index} title={t.title} sub={t.sub} />
         <div className="pgrid">
-          {t.items.map((p, i) => <Card key={p.name} p={p} i={i} view={t.view} l={t.vis} />)}
+          {t.items.map((p, i) => <Card key={p.name} p={p} i={i} view={t.view} live={t.live} l={t.vis} />)}
         </div>
       </div>
     </section>
