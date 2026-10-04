@@ -313,6 +313,11 @@ html.cursor-out .cursor-dot, html.cursor-out .cursor-ring { opacity: 0; }
 .pcard-actions { display: flex; flex-wrap: wrap; gap: 10px; }
 .pcard h3 { font-size: clamp(36px, 4vw, 56px); }
 .clone { font-family: var(--mono); font-size: 13px; font-weight: 400; color: var(--muted); letter-spacing: 0; vertical-align: super; }
+.clone.wip { color: var(--accent); }
+.vis.term { padding: 22px 20px; font-family: var(--mono); font-size: 13px; line-height: 1.9; color: var(--muted); display: flex; flex-direction: column; justify-content: center; }
+.vis.term p { margin: 0; white-space: pre; overflow: hidden; text-overflow: ellipsis; }
+.vis.term .cmd { color: var(--fg); }
+.vis.term .note { color: var(--accent); }
 .features { display: flex; flex-wrap: wrap; gap: 6px; margin: 14px 0; }
 .features span { font-size: 13px; padding: 4px 10px; border-radius: 999px; background: color-mix(in srgb, var(--accent) 14%, transparent); color: var(--accent); }
 .pcard p { color: var(--muted); font-size: 15px; }

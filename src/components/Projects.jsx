@@ -123,7 +123,17 @@ function Mixer({ l }) {
   )
 }
 
-const visuals = { seatmap: SeatMap, route: RouteMap, cart: MiniCart, mixer: Mixer }
+function Terminal({ p }) {
+  return (
+    <div className="vis term" aria-hidden="true">
+      {p.terminal.map((line, i) => (
+        <p key={i} className={line.startsWith('$') ? 'cmd' : line.startsWith('#') ? 'note' : ''}>{line}</p>
+      ))}
+    </div>
+  )
+}
+
+const visuals = { seatmap: SeatMap, route: RouteMap, cart: MiniCart, mixer: Mixer, term: Terminal }
 
 function Card({ p, i, view, live, l }) {
   const ref = useRef(null)
@@ -145,9 +155,9 @@ function Card({ p, i, view, live, l }) {
         <span className="mono">{String(i + 1).padStart(2, '0')} / {p.kind}</span>
         <span className="mono">{p.year}</span>
       </div>
-      {Vis && <Vis l={l} />}
+      {Vis && <Vis l={l} p={p} />}
       <div className="pcard-body">
-        <h3>{p.name}{p.clone && <span className="clone"> clone</span>}</h3>
+        <h3>{p.name}{p.clone && <span className="clone"> clone</span>}{p.wip && <span className="clone wip"> in progress</span>}</h3>
         <div className="features">
           {p.features.map((f) => <span key={f}>{f}</span>)}
         </div>
