@@ -107,7 +107,8 @@ export const content = {
         desc: 'An event ticketing platform modelled on iTicket.az: event search and filters, an interactive seat map, a cart with countdown timer and a user profile with tickets, orders, wallet and refunds. Real card payments via the Payriff API through a Node.js/Express service that keeps the secret key server-side and verifies payment status. Google sign-in, multi-language UI and dark mode.',
         stack: ['React', 'React Router', 'Context API', 'Node.js', 'Express', 'Payriff'],
         url: 'https://github.com/saidmuradkhan/Iticket',
-        features: ['Seat map', 'Real payments', 'Google Auth'],
+        live: 'https://iticket.saidmuradkhan.dev',
+        features: ['Seat map', 'Payriff payments', 'Google Auth'],
       },
       {
         name: 'Carify',
