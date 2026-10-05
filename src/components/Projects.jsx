@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import SectionHead from './SectionHead.jsx'
 
 // Mini, playable seat map — a nod to the iTicket clone.
@@ -135,46 +135,38 @@ function Terminal({ p }) {
 
 const visuals = { seatmap: SeatMap, route: RouteMap, cart: MiniCart, mixer: Mixer, term: Terminal }
 
-const Arrow = ({ dir }) => (
-  <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" style={dir < 0 ? { transform: 'scaleX(-1)' } : undefined}>
-    <path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-  </svg>
-)
-
 const pad = (n) => String(n).padStart(2, '0')
 
-function Spotlight({ p, n, total, t, onStep }) {
-  const Vis = visuals[p.vis]
-  const touchX = useRef(null)
+// Tile sizes follow the grid areas in styles.css (a0…a6): wide tiles put the visual
+// beside the text, tall ones above it, small ones skip it.
+const sizes = ['wide', 'small', 'small', 'tall', 'tall', 'wide', 'wide']
 
-  // A horizontal swipe on phones moves to the next or previous project.
-  const onTouchStart = (e) => {
-    touchX.current = e.target.closest('input, button') ? null : e.touches[0].clientX
-  }
-  const onTouchEnd = (e) => {
-    if (touchX.current === null) return
-    const dx = e.changedTouches[0].clientX - touchX.current
-    touchX.current = null
-    if (Math.abs(dx) > 60) onStep(dx < 0 ? 1 : -1)
+function Tile({ p, i, t }) {
+  const ref = useRef(null)
+  const size = sizes[i] || 'small'
+  const Vis = size === 'small' ? null : visuals[p.vis]
+
+  const onMove = (e) => {
+    const r = ref.current.getBoundingClientRect()
+    ref.current.style.setProperty('--mx', `${e.clientX - r.left}px`)
+    ref.current.style.setProperty('--my', `${e.clientY - r.top}px`)
   }
 
   return (
-    <article className="spot" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd} aria-live="polite">
-      <div className="spot-vis">{Vis && <Vis l={t.vis} p={p} />}</div>
-      <div className="spot-body">
-        <div className="spot-meta mono">
-          <span>{pad(n)} / {pad(total)}</span>
-          <span>{p.kind} · {p.year}</span>
+    <article ref={ref} className={`tile tile-${size}`} style={{ gridArea: `a${i}` }} onPointerMove={onMove} data-reveal>
+      {Vis && <div className="tile-vis"><Vis l={t.vis} p={p} /></div>}
+      <div className="tile-body">
+        <div className="tile-meta mono">
+          <span>{pad(i + 1)} / {p.kind}</span>
+          {p.live && <span className="tile-live"><i className="live-dot" /> live</span>}
         </div>
         <h3>{p.name}{p.clone && <span className="clone"> clone</span>}{p.wip && <span className="clone wip"> in progress</span>}</h3>
         <div className="features">
           {p.features.map((f) => <span key={f}>{f}</span>)}
         </div>
-        <p className="spot-desc">{p.desc}</p>
-        <div className="stack">
-          {p.stack.map((s) => <span key={s} className="mono">{s}</span>)}
-        </div>
-        <div className="spot-foot">
+        <p className="tile-desc">{p.desc}</p>
+        <div className="tile-stack mono">{p.stack.join(' · ')}</div>
+        <div className="tile-foot">
           <div className="pcard-actions">
             {p.live && (
               <a href={p.live} target="_blank" rel="noreferrer" className="btn btn-fill" data-cursor="↗"
@@ -186,52 +178,20 @@ function Spotlight({ p, n, total, t, onStep }) {
               {t.view} <span aria-hidden="true">↗</span>
             </a>
           </div>
-          <div className="spot-nav">
-            <button className="spot-arrow" onClick={() => onStep(-1)} aria-label={t.prev} data-cursor="←"><Arrow dir={-1} /></button>
-            <button className="spot-arrow" onClick={() => onStep(1)} aria-label={t.next} data-cursor="→"><Arrow dir={1} /></button>
-          </div>
+          {p.preview && <span className="pcard-note mono">{t.previewNote}</span>}
         </div>
-        {p.preview && <span className="pcard-note mono">{t.previewNote}</span>}
       </div>
     </article>
   )
 }
 
 export default function Projects({ t }) {
-  const [active, setActive] = useState(0)
-  const picker = useRef(null)
-  const total = t.items.length
-  const step = (d) => setActive((i) => (i + d + total) % total)
-
-  // Keep the selected tab visible when the picker scrolls sideways on small screens.
-  useEffect(() => {
-    const strip = picker.current
-    const tab = strip?.children[active]
-    if (!tab || strip.scrollWidth <= strip.clientWidth) return
-    strip.scrollTo({ left: tab.offsetLeft - (strip.clientWidth - tab.offsetWidth) / 2, behavior: 'smooth' })
-  }, [active])
-
-  const onKey = (e) => {
-    if (e.key === 'ArrowRight') { e.preventDefault(); step(1) }
-    if (e.key === 'ArrowLeft') { e.preventDefault(); step(-1) }
-  }
-
   return (
     <section id="projects" className="section">
       <div className="wrap">
         <SectionHead index={t.index} title={t.title} sub={t.sub} />
-        <div className="showcase" data-reveal>
-          <Spotlight key={t.items[active].name} p={t.items[active]} n={active + 1} total={total} t={t} onStep={step} />
-          <div className="picker" ref={picker} role="tablist" aria-label={t.title} onKeyDown={onKey}>
-            {t.items.map((p, i) => (
-              <button key={p.name} role="tab" aria-selected={i === active} tabIndex={i === active ? 0 : -1}
-                className={i === active ? 'on' : ''} onClick={() => setActive(i)}>
-                <span className="mono">{pad(i + 1)}{p.live && <i className="live-dot" />}</span>
-                <strong>{p.name}</strong>
-                <span>{p.kind}</span>
-              </button>
-            ))}
-          </div>
+        <div className="bento">
+          {t.items.map((p, i) => <Tile key={p.name} p={p} i={i} t={t} />)}
         </div>
       </div>
     </section>
