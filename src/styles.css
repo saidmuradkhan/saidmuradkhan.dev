@@ -294,7 +294,32 @@ html.cursor-out .cursor-dot, html.cursor-out .cursor-ring { opacity: 0; }
 .work-across { margin-top: 28px; padding: 20px 24px; border-radius: 16px; background: var(--bg-2); color: var(--muted); border-left: 3px solid var(--accent); }
 
 /* Projects */
-.pgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.ptools { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 28px; }
+.ptabs { display: flex; flex-wrap: wrap; gap: 4px; padding: 4px; border: 1px solid var(--line); border-radius: 999px; background: var(--bg-2); }
+.ptabs button { display: inline-flex; align-items: center; gap: 8px; padding: 9px 16px; border-radius: 999px; font-size: 14px; font-weight: 500; color: var(--muted); transition: color 0.3s, background 0.35s var(--ease); }
+.ptabs button:hover { color: var(--fg); }
+.ptabs button .mono { font-size: 11px; opacity: 0.7; }
+.ptabs button.on { background: var(--accent); color: var(--accent-ink); }
+.parrows { display: flex; gap: 10px; }
+.parrow { width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center; border: 1px solid var(--line); background: var(--bg-2); transition: border-color 0.3s, color 0.3s, opacity 0.3s, transform 0.3s var(--ease); }
+.parrow:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); transform: scale(1.06); }
+.parrow:disabled { opacity: 0.3; cursor: default; }
+/* The track bleeds into the page gutter so the next card peeks in from the edge. */
+.ptrack {
+  display: grid; grid-auto-flow: column; grid-auto-columns: calc((100% - 48px) / 3); gap: 24px;
+  margin: 0 calc(-1 * var(--pad)); padding: 10px var(--pad) 28px; scroll-padding-inline: var(--pad);
+  overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; scrollbar-width: none;
+}
+.ptrack::-webkit-scrollbar { display: none; }
+.ptrack:focus-visible { outline: none; }
+.ptrack:focus-visible .pcard { border-color: color-mix(in srgb, var(--accent) 35%, transparent); }
+.ptrack > .pcard { scroll-snap-align: start; }
+.pdots { display: flex; justify-content: center; gap: 8px; margin-top: 4px; }
+.pdots button { width: 8px; height: 8px; border-radius: 999px; background: var(--line); transition: width 0.4s var(--ease), background 0.3s; }
+.pdots button:hover { background: var(--muted); }
+.pdots button.on { width: 26px; background: var(--accent); }
+.pcard-note { margin-top: 12px; font-size: 11px; color: var(--muted); }
+.pcard-note::before { content: '● '; color: var(--accent); }
 .pcard {
   --mx: 50%; --my: 50%;
   position: relative; border: 1px solid var(--line); border-radius: 28px; background: var(--bg-2); overflow: hidden;
@@ -305,13 +330,12 @@ html.cursor-out .cursor-dot, html.cursor-out .cursor-ring { opacity: 0; }
 .pcard::before { content: ''; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(500px circle at var(--mx) var(--my), var(--glow), transparent 45%); opacity: 0; transition: opacity 0.4s; }
 .pcard:hover { border-color: color-mix(in srgb, var(--accent) 50%, transparent); }
 .pcard:hover::before { opacity: 1; }
-.pcard[data-reveal]:not([data-shown]) { transform: translateY(40px); }
 .pcard-top { display: flex; justify-content: space-between; padding: 20px 24px; color: var(--muted); }
 .vis { position: relative; margin: 0 24px; height: 250px; border-radius: 18px; background: var(--bg); border: 1px solid var(--line); overflow: hidden; }
 /* body fills the card so the stack + button always sit on the same baseline in both cards */
 .pcard-body { position: relative; padding: 26px 24px 28px; flex: 1; display: flex; flex-direction: column; align-items: flex-start; }
 .pcard-actions { display: flex; flex-wrap: wrap; gap: 10px; }
-.pcard h3 { font-size: clamp(36px, 4vw, 56px); }
+.pcard h3 { font-size: clamp(32px, 3.2vw, 46px); }
 .clone { font-family: var(--mono); font-size: 13px; font-weight: 400; color: var(--muted); letter-spacing: 0; vertical-align: super; }
 .clone.wip { color: var(--accent); }
 .vis.term { padding: 22px 20px; font-family: var(--mono); font-size: 13px; line-height: 1.9; color: var(--muted); display: flex; flex-direction: column; justify-content: center; }
@@ -428,7 +452,8 @@ html.cursor-out .cursor-dot, html.cursor-out .cursor-ring { opacity: 0; }
 
 /* ---------- Responsive ---------- */
 @media (max-width: 960px) {
-  .about-grid, .work-grid, .pgrid { grid-template-columns: 1fr; }
+  .about-grid, .work-grid { grid-template-columns: 1fr; }
+  .ptrack { grid-auto-columns: calc((100% - 24px) / 2); }
   .work-side { position: static; }
   .socials { grid-template-columns: repeat(2, 1fr); }
   .edu-item { grid-template-columns: 1fr; gap: 8px; }
@@ -472,6 +497,12 @@ html.cursor-out .cursor-dot, html.cursor-out .cursor-ring { opacity: 0; }
   .dock { bottom: 12px; }
   .dock a { padding: 8px 10px; font-size: 12.5px; }
   .foot { padding-bottom: 20px; }
+  .ptrack { grid-auto-columns: 86%; gap: 14px; }
+  .ptools { flex-direction: column; align-items: stretch; }
+  .ptabs { display: grid; grid-template-columns: repeat(4, auto); justify-content: space-between; }
+  .ptabs button { justify-content: center; padding: 8px 10px; font-size: 13px; }
+  .ptabs button .mono { display: none; }
+  .parrows { display: none; }
 }
 
 @media (hover: none) {

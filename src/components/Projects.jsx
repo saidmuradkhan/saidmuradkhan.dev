@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import SectionHead from './SectionHead.jsx'
 import { isTouch } from '../hooks.jsx'
 
@@ -135,7 +135,7 @@ function Terminal({ p }) {
 
 const visuals = { seatmap: SeatMap, route: RouteMap, cart: MiniCart, mixer: Mixer, term: Terminal }
 
-function Card({ p, i, view, live, l }) {
+function Card({ p, n, view, live, l, previewNote }) {
   const ref = useRef(null)
   const onMove = (e) => {
     if (isTouch()) return
@@ -150,9 +150,9 @@ function Card({ p, i, view, live, l }) {
   const Vis = visuals[p.vis]
 
   return (
-    <article className="pcard" ref={ref} onPointerMove={onMove} onPointerLeave={reset} data-reveal>
+    <article className="pcard" ref={ref} onPointerMove={onMove} onPointerLeave={reset}>
       <div className="pcard-top">
-        <span className="mono">{String(i + 1).padStart(2, '0')} / {p.kind}</span>
+        <span className="mono">{String(n).padStart(2, '0')} / {p.kind}</span>
         <span className="mono">{p.year}</span>
       </div>
       {Vis && <Vis l={l} p={p} />}
@@ -167,7 +167,8 @@ function Card({ p, i, view, live, l }) {
         </div>
         <div className="pcard-actions">
           {p.live && (
-            <a href={p.live} target="_blank" rel="noreferrer" className="btn btn-fill pcard-link" data-cursor="↗">
+            <a href={p.live} target="_blank" rel="noreferrer" className="btn btn-fill pcard-link" data-cursor="↗"
+              title={p.preview ? previewNote : undefined}>
               {live} <span aria-hidden="true">↗</span>
             </a>
           )}
@@ -175,18 +176,95 @@ function Card({ p, i, view, live, l }) {
             {view} <span aria-hidden="true">↗</span>
           </a>
         </div>
+        {p.preview && <span className="pcard-note mono">{previewNote}</span>}
       </div>
     </article>
   )
 }
 
+const Arrow = ({ dir }) => (
+  <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" style={dir < 0 ? { transform: 'scaleX(-1)' } : undefined}>
+    <path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+)
+
 export default function Projects({ t }) {
+  const [group, setGroup] = useState('all')
+  const [view, setView] = useState({ first: 0, count: 1, start: true, end: false })
+  const track = useRef(null)
+  const items = group === 'all' ? t.items : t.items.filter((p) => p.group === group)
+
+  // Width of one card plus the gap — how far a single arrow click moves the track.
+  const step = () => {
+    const el = track.current
+    const card = el.firstElementChild
+    if (!card) return el.clientWidth
+    return card.getBoundingClientRect().width + parseFloat(getComputedStyle(el).columnGap || 0)
+  }
+
+  const measure = useCallback(() => {
+    const el = track.current
+    if (!el) return
+    const s = step()
+    const max = el.scrollWidth - el.clientWidth
+    setView({
+      first: Math.round(el.scrollLeft / s),
+      count: Math.max(1, Math.round(el.clientWidth / s)),
+      start: el.scrollLeft <= 2,
+      end: el.scrollLeft >= max - 2,
+    })
+  }, [])
+
+  useEffect(() => {
+    track.current.scrollTo({ left: 0 })
+    measure()
+  }, [group, measure])
+
+  useEffect(() => {
+    window.addEventListener('resize', measure)
+    return () => window.removeEventListener('resize', measure)
+  }, [measure])
+
+  const slide = (dir) => track.current.scrollBy({ left: dir * step(), behavior: 'smooth' })
+  const goTo = (i) => track.current.scrollTo({ left: i * step(), behavior: 'smooth' })
+  const onKey = (e) => {
+    if (e.key === 'ArrowRight') { e.preventDefault(); slide(1) }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); slide(-1) }
+  }
+
+  const counts = { all: t.items.length }
+  t.items.forEach((p) => { counts[p.group] = (counts[p.group] || 0) + 1 })
+  const lastVisible = view.end ? items.length - 1 : view.first + view.count - 1
+
   return (
     <section id="projects" className="section">
       <div className="wrap">
         <SectionHead index={t.index} title={t.title} sub={t.sub} />
-        <div className="pgrid">
-          {t.items.map((p, i) => <Card key={p.name} p={p} i={i} view={t.view} live={t.live} l={t.vis} />)}
+        <div className="ptools" data-reveal>
+          <div className="ptabs" role="tablist" aria-label={t.filterLabel}>
+            {Object.entries(t.groups).map(([key, label]) => (
+              <button key={key} role="tab" aria-selected={group === key} className={group === key ? 'on' : ''}
+                onClick={() => setGroup(key)}>
+                {label} <span className="mono">{counts[key] || 0}</span>
+              </button>
+            ))}
+          </div>
+          <div className="parrows">
+            <button className="parrow" onClick={() => slide(-1)} disabled={view.start} aria-label={t.prev} data-cursor="←"><Arrow dir={-1} /></button>
+            <button className="parrow" onClick={() => slide(1)} disabled={view.end} aria-label={t.next} data-cursor="→"><Arrow dir={1} /></button>
+          </div>
+        </div>
+        <div className="ptrack" ref={track} onScroll={measure} onKeyDown={onKey} tabIndex={0}
+          role="region" aria-label={t.title} data-reveal>
+          {items.map((p) => (
+            <Card key={p.name} p={p} n={t.items.indexOf(p) + 1} view={t.view} live={t.live} l={t.vis} previewNote={t.previewNote} />
+          ))}
+        </div>
+        <div className="pdots">
+          {items.map((p, i) => (
+            <button key={p.name} className={i >= view.first && i <= lastVisible ? 'on' : ''} onClick={() => goTo(i)}
+              aria-label={p.name} />
+          ))}
         </div>
       </div>
     </section>
