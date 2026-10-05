@@ -1,6 +1,5 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import SectionHead from './SectionHead.jsx'
-import { isTouch } from '../hooks.jsx'
 
 // Mini, playable seat map — a nod to the iTicket clone.
 function SeatMap({ l }) {
@@ -126,6 +125,7 @@ function Mixer({ l }) {
 function Terminal({ p }) {
   return (
     <div className="vis term" aria-hidden="true">
+      <div className="vis-bar mono"><i /><i /><i /><span>~/{p.name}</span></div>
       {p.terminal.map((line, i) => (
         <p key={i} className={line.startsWith('$') ? 'cmd' : line.startsWith('#') ? 'note' : ''}>{line}</p>
       ))}
@@ -135,136 +135,103 @@ function Terminal({ p }) {
 
 const visuals = { seatmap: SeatMap, route: RouteMap, cart: MiniCart, mixer: Mixer, term: Terminal }
 
-function Card({ p, n, view, live, l, previewNote }) {
-  const ref = useRef(null)
-  const onMove = (e) => {
-    if (isTouch()) return
-    const r = ref.current.getBoundingClientRect()
-    const x = (e.clientX - r.left) / r.width
-    const y = (e.clientY - r.top) / r.height
-    ref.current.style.setProperty('--mx', `${x * 100}%`)
-    ref.current.style.setProperty('--my', `${y * 100}%`)
-    ref.current.style.transform = `perspective(1100px) rotateY(${(x - 0.5) * 6}deg) rotateX(${(0.5 - y) * 6}deg)`
-  }
-  const reset = () => { ref.current.style.transform = '' }
-  const Vis = visuals[p.vis]
-
-  return (
-    <article className="pcard" ref={ref} onPointerMove={onMove} onPointerLeave={reset}>
-      <div className="pcard-top">
-        <span className="mono">{String(n).padStart(2, '0')} / {p.kind}</span>
-        <span className="mono">{p.year}</span>
-      </div>
-      {Vis && <Vis l={l} p={p} />}
-      <div className="pcard-body">
-        <h3>{p.name}{p.clone && <span className="clone"> clone</span>}{p.wip && <span className="clone wip"> in progress</span>}</h3>
-        <div className="features">
-          {p.features.map((f) => <span key={f}>{f}</span>)}
-        </div>
-        <p>{p.desc}</p>
-        <div className="stack">
-          {p.stack.map((s) => <span key={s} className="mono">{s}</span>)}
-        </div>
-        <div className="pcard-actions">
-          {p.live && (
-            <a href={p.live} target="_blank" rel="noreferrer" className="btn btn-fill pcard-link" data-cursor="↗"
-              title={p.preview ? previewNote : undefined}>
-              {live} <span aria-hidden="true">↗</span>
-            </a>
-          )}
-          <a href={p.url} target="_blank" rel="noreferrer" className={`btn pcard-link${p.live ? '' : ' btn-fill'}`} data-cursor="↗">
-            {view} <span aria-hidden="true">↗</span>
-          </a>
-        </div>
-        {p.preview && <span className="pcard-note mono">{previewNote}</span>}
-      </div>
-    </article>
-  )
-}
-
 const Arrow = ({ dir }) => (
   <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" style={dir < 0 ? { transform: 'scaleX(-1)' } : undefined}>
     <path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 )
 
+const pad = (n) => String(n).padStart(2, '0')
+
+function Spotlight({ p, n, total, t, onStep }) {
+  const Vis = visuals[p.vis]
+  const touchX = useRef(null)
+
+  // A horizontal swipe on phones moves to the next or previous project.
+  const onTouchStart = (e) => {
+    touchX.current = e.target.closest('input, button') ? null : e.touches[0].clientX
+  }
+  const onTouchEnd = (e) => {
+    if (touchX.current === null) return
+    const dx = e.changedTouches[0].clientX - touchX.current
+    touchX.current = null
+    if (Math.abs(dx) > 60) onStep(dx < 0 ? 1 : -1)
+  }
+
+  return (
+    <article className="spot" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd} aria-live="polite">
+      <div className="spot-vis">{Vis && <Vis l={t.vis} p={p} />}</div>
+      <div className="spot-body">
+        <div className="spot-meta mono">
+          <span>{pad(n)} / {pad(total)}</span>
+          <span>{p.kind} · {p.year}</span>
+        </div>
+        <h3>{p.name}{p.clone && <span className="clone"> clone</span>}{p.wip && <span className="clone wip"> in progress</span>}</h3>
+        <div className="features">
+          {p.features.map((f) => <span key={f}>{f}</span>)}
+        </div>
+        <p className="spot-desc">{p.desc}</p>
+        <div className="stack">
+          {p.stack.map((s) => <span key={s} className="mono">{s}</span>)}
+        </div>
+        <div className="spot-foot">
+          <div className="pcard-actions">
+            {p.live && (
+              <a href={p.live} target="_blank" rel="noreferrer" className="btn btn-fill" data-cursor="↗"
+                title={p.preview ? t.previewNote : undefined}>
+                {t.live} <span aria-hidden="true">↗</span>
+              </a>
+            )}
+            <a href={p.url} target="_blank" rel="noreferrer" className={`btn${p.live ? '' : ' btn-fill'}`} data-cursor="↗">
+              {t.view} <span aria-hidden="true">↗</span>
+            </a>
+          </div>
+          <div className="spot-nav">
+            <button className="spot-arrow" onClick={() => onStep(-1)} aria-label={t.prev} data-cursor="←"><Arrow dir={-1} /></button>
+            <button className="spot-arrow" onClick={() => onStep(1)} aria-label={t.next} data-cursor="→"><Arrow dir={1} /></button>
+          </div>
+        </div>
+        {p.preview && <span className="pcard-note mono">{t.previewNote}</span>}
+      </div>
+    </article>
+  )
+}
+
 export default function Projects({ t }) {
-  const [group, setGroup] = useState('all')
-  const [view, setView] = useState({ first: 0, count: 1, start: true, end: false })
-  const track = useRef(null)
-  const items = group === 'all' ? t.items : t.items.filter((p) => p.group === group)
+  const [active, setActive] = useState(0)
+  const picker = useRef(null)
+  const total = t.items.length
+  const step = (d) => setActive((i) => (i + d + total) % total)
 
-  // Width of one card plus the gap — how far a single arrow click moves the track.
-  const step = () => {
-    const el = track.current
-    const card = el.firstElementChild
-    if (!card) return el.clientWidth
-    return card.getBoundingClientRect().width + parseFloat(getComputedStyle(el).columnGap || 0)
-  }
-
-  const measure = useCallback(() => {
-    const el = track.current
-    if (!el) return
-    const s = step()
-    const max = el.scrollWidth - el.clientWidth
-    setView({
-      first: Math.round(el.scrollLeft / s),
-      count: Math.max(1, Math.round(el.clientWidth / s)),
-      start: el.scrollLeft <= 2,
-      end: el.scrollLeft >= max - 2,
-    })
-  }, [])
-
+  // Keep the selected tab visible when the picker scrolls sideways on small screens.
   useEffect(() => {
-    track.current.scrollTo({ left: 0 })
-    measure()
-  }, [group, measure])
+    const strip = picker.current
+    const tab = strip?.children[active]
+    if (!tab || strip.scrollWidth <= strip.clientWidth) return
+    strip.scrollTo({ left: tab.offsetLeft - (strip.clientWidth - tab.offsetWidth) / 2, behavior: 'smooth' })
+  }, [active])
 
-  useEffect(() => {
-    window.addEventListener('resize', measure)
-    return () => window.removeEventListener('resize', measure)
-  }, [measure])
-
-  const slide = (dir) => track.current.scrollBy({ left: dir * step(), behavior: 'smooth' })
-  const goTo = (i) => track.current.scrollTo({ left: i * step(), behavior: 'smooth' })
   const onKey = (e) => {
-    if (e.key === 'ArrowRight') { e.preventDefault(); slide(1) }
-    if (e.key === 'ArrowLeft') { e.preventDefault(); slide(-1) }
+    if (e.key === 'ArrowRight') { e.preventDefault(); step(1) }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); step(-1) }
   }
-
-  const counts = { all: t.items.length }
-  t.items.forEach((p) => { counts[p.group] = (counts[p.group] || 0) + 1 })
-  const lastVisible = view.end ? items.length - 1 : view.first + view.count - 1
 
   return (
     <section id="projects" className="section">
       <div className="wrap">
         <SectionHead index={t.index} title={t.title} sub={t.sub} />
-        <div className="ptools" data-reveal>
-          <div className="ptabs" role="tablist" aria-label={t.filterLabel}>
-            {Object.entries(t.groups).map(([key, label]) => (
-              <button key={key} role="tab" aria-selected={group === key} className={group === key ? 'on' : ''}
-                onClick={() => setGroup(key)}>
-                {label} <span className="mono">{counts[key] || 0}</span>
+        <div className="showcase" data-reveal>
+          <Spotlight key={t.items[active].name} p={t.items[active]} n={active + 1} total={total} t={t} onStep={step} />
+          <div className="picker" ref={picker} role="tablist" aria-label={t.title} onKeyDown={onKey}>
+            {t.items.map((p, i) => (
+              <button key={p.name} role="tab" aria-selected={i === active} tabIndex={i === active ? 0 : -1}
+                className={i === active ? 'on' : ''} onClick={() => setActive(i)}>
+                <span className="mono">{pad(i + 1)}{p.live && <i className="live-dot" />}</span>
+                <strong>{p.name}</strong>
+                <span>{p.kind}</span>
               </button>
             ))}
           </div>
-          <div className="parrows">
-            <button className="parrow" onClick={() => slide(-1)} disabled={view.start} aria-label={t.prev} data-cursor="←"><Arrow dir={-1} /></button>
-            <button className="parrow" onClick={() => slide(1)} disabled={view.end} aria-label={t.next} data-cursor="→"><Arrow dir={1} /></button>
-          </div>
-        </div>
-        <div className="ptrack" ref={track} onScroll={measure} onKeyDown={onKey} tabIndex={0}
-          role="region" aria-label={t.title} data-reveal>
-          {items.map((p) => (
-            <Card key={p.name} p={p} n={t.items.indexOf(p) + 1} view={t.view} live={t.live} l={t.vis} previewNote={t.previewNote} />
-          ))}
-        </div>
-        <div className="pdots">
-          {items.map((p, i) => (
-            <button key={p.name} className={i >= view.first && i <= lastVisible ? 'on' : ''} onClick={() => goTo(i)}
-              aria-label={p.name} />
-          ))}
         </div>
       </div>
     </section>

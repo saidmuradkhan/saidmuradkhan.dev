@@ -97,15 +97,12 @@ export const content = {
     view: 'GitHub',
     live: 'Live demo',
     previewNote: 'Private preview · login required',
-    filterLabel: 'Filter projects',
     prev: 'Previous project',
     next: 'Next project',
-    groups: { all: 'All', backend: 'Backend', fullstack: 'Full-stack', frontend: 'Frontend' },
     vis: { stage: 'STAGE', car: 'Car', ship: 'shipping', baku: 'Baku', less: 'Remove one', more: 'Add one', freeShip: 'Free delivery ✓', toFree: 'to free delivery', ingredients: 'ingredients' },
     items: [
       {
         name: 'az-job-radar',
-        group: 'backend',
         wip: true,
         vis: 'term',
         kind: 'Job market scraper',
@@ -120,7 +117,6 @@ export const content = {
       },
       {
         name: 'cbar-rates',
-        group: 'backend',
         wip: true,
         vis: 'term',
         kind: 'Go microservice',
@@ -135,7 +131,6 @@ export const content = {
       },
       {
         name: 'jobtrack',
-        group: 'fullstack',
         wip: true,
         vis: 'term',
         kind: 'Full-stack app',
@@ -148,7 +143,6 @@ export const content = {
       },
       {
         name: 'iTicket',
-        group: 'fullstack',
         clone: true,
         vis: 'seatmap',
         kind: 'Ticketing platform',
@@ -161,7 +155,6 @@ export const content = {
       },
       {
         name: 'Carify',
-        group: 'frontend',
         clone: true,
         vis: 'route',
         kind: 'Car import',
@@ -174,7 +167,6 @@ export const content = {
       },
       {
         name: 'Zenvolt',
-        group: 'frontend',
         vis: 'cart',
         kind: 'E-commerce store',
         year: '2026',
@@ -186,7 +178,6 @@ export const content = {
       },
       {
         name: 'Amber Lounge',
-        group: 'frontend',
         vis: 'mixer',
         kind: 'Cocktail discovery',
         year: '2026',
