@@ -133,6 +133,7 @@ export const content = {
         desc: 'A job application tracker: browse vacancies collected by az-job-radar, save them in one click and move each application from "applied" to "offer" on a kanban board. Forwarded job emails (EN/AZ/RU) move statuses by themselves, and salaries show in AZN and USD through cbar-rates. Django REST Framework API with JWT auth, React frontend, 170 tests in CI.',
         stack: ['Django', 'Django REST Framework', 'JWT', 'PostgreSQL', 'React', 'Vitest'],
         url: 'https://github.com/saidmuradkhan/jobtrack',
+        live: 'https://jobs.saidmuradkhan.dev',
         features: ['Kanban board', 'Email updates', '3 services'],
         terminal: ['# applications', 'Applied     ■ ■ ■ ■', 'Interview   ■ ■', 'Offer       ■'],
       },
