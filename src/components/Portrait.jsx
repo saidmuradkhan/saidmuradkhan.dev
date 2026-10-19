@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react'
 import { reducedMotion } from '../hooks.jsx'
 
 const SRC = '/said-portrait.webp'
-const RATIO = 941 / 720
 const GAP = 4
 const ASSEMBLE_MS = 1300
 const TRAVEL = 0.55
@@ -21,7 +20,9 @@ function sample(img, w, h) {
   off.width = w
   off.height = h
   const ctx = off.getContext('2d', { willReadFrequently: true })
-  ctx.drawImage(img, 0, 0, w, h)
+  const scale = Math.max(w / img.width, h / img.height)
+  const dw = img.width * scale
+  ctx.drawImage(img, (w - dw) / 2, 0, dw, img.height * scale)
   const { data } = ctx.getImageData(0, 0, w, h)
   const dots = []
   for (let y = GAP / 2; y < h; y += GAP) {
@@ -66,7 +67,7 @@ export default function Portrait({ alt, start, className = '' }) {
       if (cancelled) return
       const dpr = Math.min(devicePixelRatio || 1, 2)
       const w = el.clientWidth
-      const h = Math.round(w * RATIO)
+      const h = el.clientHeight
       c.width = w * dpr
       c.height = h * dpr
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
