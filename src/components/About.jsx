@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import SectionHead from './SectionHead.jsx'
 import { Counter } from '../hooks.jsx'
-import Portrait from './Portrait.jsx'
 
 // Words light up one by one as the statement scrolls through the viewport.
 function ScrollText({ html }) {
@@ -111,7 +110,6 @@ export default function About({ t, term, go }) {
         <ScrollText html={t.big} />
         <div className="about-grid">
           <div className="about-text" data-reveal>
-            <Portrait alt="Said Muradkhan" />
             <p>{t.p1}</p>
             <p>{t.p2}</p>
             <div className="stats">

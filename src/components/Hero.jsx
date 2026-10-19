@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import DotField from './DotField.jsx'
+import Portrait from './Portrait.jsx'
 import { links } from '../data.js'
 
 function Typer({ words }) {
@@ -36,10 +37,13 @@ export default function Hero({ t, name, ready, go }) {
       <div className="hero-glow" aria-hidden="true" />
       <div className="wrap hero-inner">
         <p className="eyebrow mono"><span className="pulse" /> {t.eyebrow}</p>
-        <h1 className="hero-title">
-          <Letters key={name.first} word={name.first} delay={100} />{' '}
-          <Letters key={name.last} word={name.last} delay={300} />
-        </h1>
+        <div className="hero-head">
+          <h1 className="hero-title">
+            <Letters key={name.first} word={name.first} delay={100} />{' '}
+            <Letters key={name.last} word={name.last} delay={300} />
+          </h1>
+          <Portrait alt={`${name.first} ${name.last}`} start={ready} className="hero-portrait" />
+        </div>
         <p className="hero-role"><span className="mono">&gt;</span> <Typer words={t.roles} /></p>
         <p className="hero-lead">{t.lead}</p>
         <div className="hero-cta">
