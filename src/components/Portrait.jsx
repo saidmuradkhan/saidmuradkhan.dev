@@ -20,9 +20,10 @@ function sample(img, w, h) {
   off.width = w
   off.height = h
   const ctx = off.getContext('2d', { willReadFrequently: true })
-  const scale = Math.max(w / img.width, h / img.height)
+  const scale = Math.min(w / img.width, h / img.height)
   const dw = img.width * scale
-  ctx.drawImage(img, (w - dw) / 2, 0, dw, img.height * scale)
+  const dh = img.height * scale
+  ctx.drawImage(img, (w - dw) / 2, h - dh, dw, dh)
   const { data } = ctx.getImageData(0, 0, w, h)
   const dots = []
   for (let y = GAP / 2; y < h; y += GAP) {
