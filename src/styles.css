@@ -311,7 +311,7 @@ html.cursor-out .cursor-dot, html.cursor-out .cursor-ring { opacity: 0; }
 /* Projects */
 .bento {
   display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-rows: minmax(340px, auto); gap: 18px;
-  grid-template-areas: 'a0 a0 a3' 'a1 a2 a3' 'a4 a5 a5' 'a4 a6 a6';
+  grid-template-areas: 'a0 a0 a3' 'a1 a2 a3' 'a4 a5 a5' 'a4 a6 a6' 'a7 a7 a7';
 }
 .tile {
   --mx: 50%; --my: 50%;
@@ -467,7 +467,7 @@ html.cursor-out .cursor-dot, html.cursor-out .cursor-ring { opacity: 0; }
   .hero-card-foot span:last-child { display: none; }
   .hero-card .portrait { flex: none; aspect-ratio: 720 / 941; }
   .about-grid, .work-grid { grid-template-columns: 1fr; }
-  .bento { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-areas: 'a0 a0' 'a1 a2' 'a3 a4' 'a5 a5' 'a6 a6'; }
+  .bento { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-areas: 'a0 a0' 'a1 a2' 'a3 a4' 'a5 a5' 'a6 a6' 'a7 a7'; }
   .work-side { position: static; }
   .socials { grid-template-columns: repeat(2, 1fr); }
   .edu-item { grid-template-columns: 1fr; gap: 8px; }

@@ -18,7 +18,7 @@ export const skillGroups = [
   { key: 'frontend', items: ['React', 'JavaScript (ES6+)', 'HTML5', 'CSS3', 'Tailwind CSS', 'Bootstrap', 'i18next'] },
   { key: 'data', items: ['MySQL', 'PostgreSQL', 'SQL'] },
   { key: 'devops', items: ['Git', 'GitHub', 'GitLab', 'CI/CD', 'Docker', 'Composer', 'npm'] },
-  { key: 'other', items: ['Python', 'C++', 'Java'] },
+  { key: 'other', items: ['Python', 'C++', 'C#', 'Java'] },
 ]
 
 export const content = {
@@ -41,7 +41,7 @@ export const content = {
     p1: 'I\'m a Computer Science student at Khazar University and a Full-Stack Developer at Leops. I work on systems that run real company operations — from refactoring legacy code to building new products from scratch.',
     p2: 'I\'m comfortable on both sides of the stack: PHP, Laravel, JavaScript, React, SQL and Git. Server configuration and deployment are part of the job too.',
     stats: [
-      { n: 7, s: '', label: 'real projects' },
+      { n: 8, s: '', label: 'real projects' },
       { n: 2, s: '', label: 'systems in production' },
       { n: 20, s: '+', label: 'technologies' },
       { n: 5, s: '', label: 'languages' },
@@ -183,6 +183,17 @@ export const content = {
         live: 'https://cocktail.saidmuradkhan.dev',
         features: ['Live search', 'Favorites', 'Public API'],
       },
+      {
+        name: 'KeyKhan',
+        vis: 'term',
+        kind: 'Desktop app',
+        year: '2026',
+        desc: 'An offline password manager for Windows. Win + ~ opens a quick search from any app: Enter copies the password, Ctrl+Enter types the login into the window you were using. A C++ core on Windows CNG derives the key with PBKDF2 (600k iterations), encrypts the vault with AES-256-GCM and keeps the key in locked memory. The WPF app adds a 2FA code generator, a password generator, clipboard auto-clear, auto-lock and CSV import from Chrome, Bitwarden and 1Password. 48 tests in CI.',
+        stack: ['C++20', 'Windows CNG', 'C#', '.NET 10', 'WPF', 'MVVM', 'xUnit', 'GitHub Actions'],
+        url: 'https://github.com/saidmuradkhan/KeyKhan',
+        features: ['Global hotkey', 'AES-256-GCM', '2FA codes'],
+        terminal: ['$ Win + ~  →  git', 'GitHub · password copied', '# clipboard clears in 20s', '# key never leaves the C++ core'],
+      },
     ],
   },
   skills: {
@@ -224,7 +235,7 @@ export const content = {
     help: 'Commands: whoami · skills · projects · contact · hire · clear',
     whoami: 'Said Muradkhan — Full-Stack Developer @ Leops. Baku. Loves Laravel + React.',
     skills: 'PHP, Laravel, JavaScript, React, Node.js, Express, MySQL, PostgreSQL, Docker, Git',
-    projects: 'Spec-Taxi · Assetra · leops.az · az-job-radar · cbar-rates · jobtrack · iTicket · Carify · Zenvolt · Amber Lounge',
+    projects: 'Spec-Taxi · Assetra · leops.az · az-job-radar · cbar-rates · jobtrack · iTicket · Carify · Zenvolt · Amber Lounge · KeyKhan',
     contact: 'saidmuradkhan414@gmail.com',
     hire: 'Great choice 😄 Taking you to the contact section...',
     unknown: 'Command not found: ',

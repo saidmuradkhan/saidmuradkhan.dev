@@ -137,9 +137,9 @@ const visuals = { seatmap: SeatMap, route: RouteMap, cart: MiniCart, mixer: Mixe
 
 const pad = (n) => String(n).padStart(2, '0')
 
-// Tile sizes follow the grid areas in styles.css (a0…a6): wide tiles put the visual
+// Tile sizes follow the grid areas in styles.css (a0…a7): wide tiles put the visual
 // beside the text, tall ones above it, small ones skip it.
-const sizes = ['wide', 'small', 'small', 'tall', 'tall', 'wide', 'wide']
+const sizes = ['wide', 'small', 'small', 'tall', 'tall', 'wide', 'wide', 'wide']
 
 function Tile({ p, i, t }) {
   const ref = useRef(null)
