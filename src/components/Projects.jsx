@@ -168,17 +168,23 @@ function Tile({ p, i, t }) {
         <div className="tile-stack mono">{p.stack.join(' · ')}</div>
         <div className="tile-foot">
           <div className="pcard-actions">
+            {p.download && (
+              <a href={p.download} className="btn btn-fill" data-cursor="↓">
+                {t.download} <span aria-hidden="true">↓</span>
+              </a>
+            )}
             {p.live && (
               <a href={p.live} target="_blank" rel="noreferrer" className="btn btn-fill" data-cursor="↗"
                 title={p.preview ? t.previewNote : undefined}>
                 {t.live} <span aria-hidden="true">↗</span>
               </a>
             )}
-            <a href={p.url} target="_blank" rel="noreferrer" className={`btn${p.live ? '' : ' btn-fill'}`} data-cursor="↗">
+            <a href={p.url} target="_blank" rel="noreferrer" className={`btn${p.live || p.download ? '' : ' btn-fill'}`} data-cursor="↗">
               {t.view} <span aria-hidden="true">↗</span>
             </a>
           </div>
           {p.preview && <span className="pcard-note mono">{t.previewNote}</span>}
+          {p.downloadNote && <span className="pcard-note mono">{p.downloadNote}</span>}
         </div>
       </div>
     </article>
