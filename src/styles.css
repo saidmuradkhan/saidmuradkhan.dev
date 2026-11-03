@@ -574,3 +574,34 @@ html.cursor-out .cursor-dot, html.cursor-out .cursor-ring { opacity: 0; }
   .nf-actions .btn { flex: 1; justify-content: center; }
   .nf-bar.mono { flex-direction: column; align-items: flex-start; }
 }
+
+/* ---------- CV split button ---------- */
+.cv-split { position: relative; display: inline-flex; }
+.cv-split .cv-main { border-radius: 999px 0 0 999px; padding-right: 18px; }
+.cv-split .cv-toggle { border-radius: 0 999px 999px 0; margin-left: -1px; padding: 0 16px; }
+.cv-split .cv-toggle svg { transition: transform 0.3s var(--ease); }
+.cv-split.open .cv-toggle svg { transform: rotate(180deg); }
+/* Opens upward: the hero clips anything that drops below its bottom edge. */
+.cv-menu {
+  position: absolute; left: 0; bottom: calc(100% + 10px); z-index: 30; min-width: 270px; padding: 6px;
+  border: 1px solid var(--line); border-radius: 20px; background: var(--bg-2);
+  box-shadow: 0 24px 60px -24px rgba(0, 0, 0, 0.55); pointer-events: auto;
+  animation: cv-in 0.25s var(--ease);
+}
+@keyframes cv-in { from { opacity: 0; transform: translateY(6px); } }
+.cv-menu-head { padding: 10px 14px 8px; color: var(--muted); font-size: 11.5px; }
+.cv-item { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 12px 14px; border-radius: 14px; font-weight: 500; transition: background 0.2s, color 0.2s; }
+.cv-item .mono { color: var(--muted); font-size: 11.5px; }
+.cv-item:first-of-type .mono { color: var(--accent); }
+.cv-item:hover, .cv-item:focus-visible { background: var(--accent); color: var(--accent-ink); }
+.cv-item:hover .mono, .cv-item:focus-visible .mono { color: var(--accent-ink); }
+.cv-other { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 18px; color: var(--muted); font-size: 12.5px; text-transform: none; }
+.cv-other a { color: var(--fg); }
+.cv-other a:hover { color: var(--accent); }
+@media (max-width: 640px) {
+  .hero-cta .cv-split { grid-column: span 3; }
+  .hero-cta .cv-split { min-width: 0; }
+  .hero-cta .cv-split .cv-main { flex: 1; min-width: 0; width: auto; gap: 6px; padding: 0 6px 0 10px; }
+  .hero-cta .cv-split .cv-toggle { width: 38px; padding: 0; flex: none; }
+  .cv-menu { min-width: 0; width: calc(200% + 10px); left: auto; right: 0; }
+}

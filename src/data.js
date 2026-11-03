@@ -5,20 +5,29 @@ export const links = {
   github: 'https://github.com/saidmuradkhan',
   gitlab: 'https://gitlab.com/saidmuradkhan414',
   linkedin: 'https://www.linkedin.com/in/said-muradkhan-0103a2350/',
-  cv: '/Said_Muradkhan_CV.pdf',
+  cv: '/cv/Said_Muradkhan_CV_FullStack.pdf',
 }
 
+// CV versiyaları — birincisi əsasdır (düymənin özü onu yükləyir), qalanları menyudadır.
+export const cvs = [
+  { key: 'fullstack', label: 'Full-Stack', note: 'Recommended', file: '/cv/Said_Muradkhan_CV_FullStack.pdf' },
+  { key: 'react', label: 'React / Front-end', file: '/cv/Said_Muradkhan_CV_React_Frontend.pdf' },
+  { key: 'laravel', label: 'PHP / Laravel', file: '/cv/Said_Muradkhan_CV_PHP_Laravel.pdf' },
+  { key: 'python', label: 'Python / Django', file: '/cv/Said_Muradkhan_CV_Python_Django.pdf' },
+  { key: 'go', label: 'Go / Back-end', file: '/cv/Said_Muradkhan_CV_Go_Backend.pdf' },
+]
+
 export const marquee = [
-  'PHP', 'Laravel', 'React', 'JavaScript', 'Node.js', 'Express', 'MySQL',
-  'PostgreSQL', 'REST API', 'Tailwind CSS', 'Docker', 'GitLab CI/CD',
+  'PHP', 'Laravel', 'React', 'JavaScript', 'Python', 'Django', 'FastAPI', 'Go',
+  'Node.js', 'MySQL', 'PostgreSQL', 'REST API', 'Tailwind CSS', 'Docker', 'GitHub Actions',
 ]
 
 export const skillGroups = [
-  { key: 'backend', items: ['PHP', 'Laravel', 'Node.js', 'Express', 'REST APIs', 'MVC'] },
-  { key: 'frontend', items: ['React', 'JavaScript (ES6+)', 'HTML5', 'CSS3', 'Tailwind CSS', 'Bootstrap', 'i18next'] },
-  { key: 'data', items: ['MySQL', 'PostgreSQL', 'SQL'] },
-  { key: 'devops', items: ['Git', 'GitHub', 'GitLab', 'CI/CD', 'Docker', 'Composer', 'npm'] },
-  { key: 'other', items: ['Python', 'C++', 'C#', 'Java'] },
+  { key: 'backend', items: ['PHP', 'Laravel', 'Python', 'Django', 'Django REST Framework', 'FastAPI', 'Go', 'Node.js', 'Express', 'REST APIs', 'JWT'] },
+  { key: 'frontend', items: ['React', 'JavaScript (ES6+)', 'HTML5', 'CSS3', 'Tailwind CSS', 'Bootstrap', 'i18next', 'Vite'] },
+  { key: 'data', items: ['MySQL', 'PostgreSQL', 'SQL', 'SQLAlchemy', 'Alembic', 'Django ORM'] },
+  { key: 'devops', items: ['Git', 'GitHub', 'GitLab', 'GitHub Actions', 'GitLab CI', 'Docker', 'Vercel', 'pytest', 'Vitest', 'Composer', 'npm'] },
+  { key: 'other', items: ['C#', '.NET (WPF)', 'C++', 'Java'] },
 ]
 
 export const content = {
@@ -27,10 +36,12 @@ export const content = {
   loading: 'Loading',
   hero: {
     eyebrow: 'Full-Stack Developer · Baku',
-    roles: ['Full-Stack Developer', 'Laravel & React', 'Python'],
+    roles: ['Full-Stack Developer', 'Laravel & React', 'Python & Django', 'Go services'],
     lead: 'I build web applications and internal systems that make a company\'s day-to-day work easier. I work across the front end and back end with one goal: software that is simple, fast and reliable.',
     ctaWork: 'See my work',
     ctaCv: 'Download CV',
+    cvMenu: 'Choose a CV version',
+    cvPick: 'Pick the version for the role',
     available: 'Open to new opportunities',
     scroll: 'Scroll down',
   },
@@ -39,7 +50,7 @@ export const content = {
     title: 'About',
     big: 'I write code not just to work, but to keep working <em>for years</em>.',
     p1: 'I\'m a Computer Science student at Khazar University and a Full-Stack Developer at Leops. I work on systems that run real company operations — from refactoring legacy code to building new products from scratch.',
-    p2: 'I\'m comfortable on both sides of the stack: PHP, Laravel, JavaScript, React, SQL and Git. Server configuration and deployment are part of the job too.',
+    p2: 'At work I use PHP, Laravel, React and MySQL. Outside work I build and deploy back-end services in Python (Django, FastAPI) and Go — tested, with CI on GitHub Actions and live in production. Server configuration and deployment are part of the job too.',
     stats: [
       { n: 8, s: '', label: 'real projects' },
       { n: 2, s: '', label: 'systems in production' },
@@ -119,8 +130,8 @@ export const content = {
         vis: 'term',
         kind: 'Go microservice',
         year: '2026',
-        desc: 'A small Go service that fetches the official exchange rates from the Central Bank of Azerbaijan, caches them in memory (falling back to the last good copy if CBAR is down) and serves them as a JSON API with a currency converter and a 30-day chart. Rates for any past day, per-client rate limiting, graceful shutdown and a 20 MB distroless Docker image. Standard library only, 96% test coverage with httptest.',
-        stack: ['Go', 'net/http', 'encoding/xml', 'httptest', 'Docker', 'Vercel'],
+        desc: 'A small Go service that fetches the official exchange rates from the Central Bank of Azerbaijan, caches them in memory (serving the last good copy, or a second rate provider, if CBAR is down) and serves them as a JSON API with a currency converter and a 30-day chart. Rates for any past day, per-IP token-bucket rate limiting, structured logging with log/slog, graceful shutdown and a ~20 MB distroless Docker image. Standard library only; tests with httptest and an 80% coverage gate in CI (go vet, go test -race).',
+        stack: ['Go', 'net/http', 'encoding/xml', 'log/slog', 'httptest', 'Docker', 'GitHub Actions', 'Vercel'],
         url: 'https://github.com/saidmuradkhan/cbar-rates',
         live: 'https://rates.saidmuradkhan.dev',
         features: ['REST API', 'Rate limiting', '30-day chart'],
@@ -131,8 +142,8 @@ export const content = {
         vis: 'term',
         kind: 'Full-stack app',
         year: '2026',
-        desc: 'A job application tracker: browse vacancies collected by az-job-radar, save them in one click and move each application from "applied" to "offer" on a kanban board. Forwarded job emails (EN/AZ/RU) move statuses by themselves, and salaries show in AZN and USD through cbar-rates. Django REST Framework API with JWT auth, React frontend, 170 tests in CI.',
-        stack: ['Django', 'Django REST Framework', 'JWT', 'PostgreSQL', 'React', 'Vitest'],
+        desc: 'A job application tracker: browse vacancies collected by az-job-radar, save them in one click and move each application from "applied" to "offer" on a kanban board. Forwarded job emails (EN/AZ/RU) move statuses by themselves, and salaries show in AZN and USD through cbar-rates. Django REST Framework API with JWT auth, React frontend, 170 tests (133 pytest-django + 37 Vitest) in CI.',
+        stack: ['Django', 'Django REST Framework', 'JWT', 'PostgreSQL', 'React', 'pytest', 'Vitest', 'GitHub Actions'],
         url: 'https://github.com/saidmuradkhan/jobtrack',
         live: 'https://jobs.saidmuradkhan.dev',
         features: ['Kanban board', 'Email updates', '3 services'],
@@ -185,14 +196,14 @@ export const content = {
         features: ['Live search', 'Favorites', 'Public API'],
       },
       {
-        name: 'KeyKhan',
+        name: 'PassIn',
         vis: 'term',
         kind: 'Desktop app',
         year: '2026',
-        desc: 'An offline password manager for Windows. Win + ~ opens a quick search from any app: Enter copies the password, Ctrl+Enter types the login into the window you were using. A C++ core on Windows CNG derives the key with PBKDF2 (600k iterations), encrypts the vault with AES-256-GCM and keeps the key in locked memory. The WPF app adds a 2FA code generator, a password generator, clipboard auto-clear, auto-lock and CSV import from Chrome, Bitwarden and 1Password. 48 tests in CI.',
-        stack: ['C++20', 'Windows CNG', 'C#', '.NET 10', 'WPF', 'MVVM', 'xUnit', 'GitHub Actions'],
-        url: 'https://github.com/saidmuradkhan/KeyKhan',
-        download: 'https://github.com/saidmuradkhan/KeyKhan/releases/latest/download/KeyKhan-Setup.exe',
+        desc: 'A keyboard-first, offline password manager for Windows. Win + ~ opens a quick search from any app: Enter copies the password, Ctrl+Enter types the login into the window you were using. A small C++ core on Windows CNG derives the key with PBKDF2 (600k iterations) and encrypts the vault with AES-256-GCM, keeping keys out of the .NET heap. The WPF app adds a 2FA code generator, a password generator, a recovery key, auto-lock, a clipboard that skips Windows history and clears itself, and CSV import from Chrome, Edge, Firefox, Bitwarden, LastPass, 1Password and KeePass. Installer with SHA-256-verified auto-updates, released through GitHub Actions.',
+        stack: ['C++', 'Windows CNG', 'C#', '.NET 10', 'WPF', 'xUnit', 'Inno Setup', 'GitHub Actions'],
+        url: 'https://github.com/saidmuradkhan/PassIn',
+        download: 'https://github.com/saidmuradkhan/PassIn/releases/latest/download/PassIn-Setup.exe',
         downloadNote: 'Windows 10/11 · free · updates itself',
         features: ['Global hotkey', 'AES-256-GCM', '2FA codes'],
         terminal: ['$ Win + ~  →  git', 'GitHub · password copied', '# clipboard clears in 20s', '# key never leaves the C++ core'],
@@ -229,6 +240,7 @@ export const content = {
     copy: 'Copy',
     copied: 'Copied!',
     send: 'Write an email',
+    cvOther: 'Other CV versions',
     local: 'Baku time',
     built: 'Built with love and lots of coffee',
     top: 'Back to top',
@@ -237,8 +249,8 @@ export const content = {
     welcome: 'said@portfolio:~$ Welcome! Type "help" to see the commands.',
     help: 'Commands: whoami · skills · projects · contact · hire · clear',
     whoami: 'Said Muradkhan — Full-Stack Developer @ Leops. Baku. Loves Laravel + React.',
-    skills: 'PHP, Laravel, JavaScript, React, Node.js, Express, MySQL, PostgreSQL, Docker, Git',
-    projects: 'Spec-Taxi · Assetra · leops.az · az-job-radar · cbar-rates · jobtrack · iTicket · Carify · Zenvolt · Amber Lounge · KeyKhan',
+    skills: 'PHP, Laravel, JavaScript, React, Python, Django, FastAPI, Go, Node.js, MySQL, PostgreSQL, Docker, Git',
+    projects: 'Spec-Taxi · Assetra · leops.az · az-job-radar · cbar-rates · jobtrack · iTicket · Carify · Zenvolt · Amber Lounge · PassIn',
     contact: 'saidmuradkhan414@gmail.com',
     hire: 'Great choice 😄 Taking you to the contact section...',
     unknown: 'Command not found: ',

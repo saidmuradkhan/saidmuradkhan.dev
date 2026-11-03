@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { links } from '../data.js'
+import { links, cvs } from '../data.js'
 
 function BakuClock() {
   const fmt = () => new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Baku', hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(new Date())
@@ -20,7 +20,7 @@ export default function Contact({ t, name, go }) {
     ['GitHub', links.github, 'saidmuradkhan'],
     ['GitLab', links.gitlab, 'saidmuradkhan414'],
     ['LinkedIn', links.linkedin, 'Said Muradkhan'],
-    ['CV', links.cv, 'PDF ↓'],
+    ['CV', links.cv, 'Full-Stack PDF ↓'],
   ]
 
   return (
@@ -48,6 +48,11 @@ export default function Contact({ t, name, go }) {
             </a>
           ))}
         </div>
+
+        <p className="cv-other mono" data-reveal>
+          <span>{t.cvOther}:</span>
+          {cvs.slice(1).map((cv) => <a key={cv.key} href={cv.file} download>{cv.label} ↓</a>)}
+        </p>
 
         <div className="foot mono">
           <span>© {new Date().getFullYear()} {name.first} {name.last}</span>
