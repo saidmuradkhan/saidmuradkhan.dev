@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 
 export const isTouch = () => typeof window !== 'undefined' && window.matchMedia('(hover: none)').matches
 export const reducedMotion = () => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -65,10 +65,13 @@ export function useInView(threshold = 0.4) {
 
 export function Counter({ to, suffix = '' }) {
   const [ref, seen] = useInView(0.6)
-  const [n, setN] = useState(0)
+  const [n, setN] = useState(to) // final value in SSR/initial markup so crawlers see real numbers
+  // reset to 0 before the first paint on the client, so the count-up never flashes the final value first
+  useLayoutEffect(() => { if (!reducedMotion()) setN(0) }, [])
   useEffect(() => {
     if (!seen) return
     if (reducedMotion()) { setN(to); return }
+    setN(0)
     let raf
     const start = performance.now()
     const tick = (t) => {

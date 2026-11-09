@@ -246,6 +246,7 @@ html.cursor-out .cursor-dot, html.cursor-out .cursor-ring { opacity: 0; }
 .stat:hover { background: var(--bg-2); }
 .stat strong { display: block; font-family: var(--display); font-size: clamp(44px, 5vw, 64px); line-height: 1; letter-spacing: -0.04em; font-variant-numeric: tabular-nums; }
 .stat > span { color: var(--muted); font-size: 14px; }
+.about-aka { color: var(--muted); font-size: 13px; }
 .term-hint { color: var(--muted); margin-bottom: 12px; }
 
 .terminal { background: #0d0d10; color: #e8e6e3; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 18px; overflow: hidden; box-shadow: 0 30px 80px -30px rgba(0, 0, 0, 0.6); cursor: text; }
