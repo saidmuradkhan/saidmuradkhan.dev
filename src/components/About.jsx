@@ -112,7 +112,6 @@ export default function About({ t, term, go }) {
           <div className="about-text" data-reveal>
             <p>{t.p1}</p>
             <p>{t.p2}</p>
-            <p className="about-aka mono">{t.aka}</p>
             <div className="stats">
               {t.stats.map((s) => (
                 <div key={s.label} className="stat">

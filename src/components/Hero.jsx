@@ -65,7 +65,7 @@ export default function Hero({ t, name, ready, go }) {
           </div>
         </div>
         <div className="hero-card">
-          <Portrait alt={`${name.first} ${name.last}`} start={ready} />
+          <Portrait alt={`${name.first} ${name.last} (Səid Muradxan)`} start={ready} />
           <div className="hero-card-foot mono">
             <span><i className="pulse" /> Baku, Azerbaijan</span>
             <span>{name.first} {name.last}</span>

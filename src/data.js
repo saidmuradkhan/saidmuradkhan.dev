@@ -51,7 +51,6 @@ export const content = {
     big: 'I write code not just to work, but to keep working <em>for years</em>.',
     p1: 'I\'m a Computer Science student at Khazar University and a Full-Stack Developer at Leops. I work on systems that run real company operations — from refactoring legacy code to building new products from scratch.',
     p2: 'At work I use PHP, Laravel, React and MySQL. Outside work I build and deploy back-end services in Python (Django, FastAPI) and Go — tested, with CI on GitHub Actions and live in production. Server configuration and deployment are part of the job too.',
-    aka: 'Also written in Azerbaijani: Səid Muradxan',
     stats: [
       { n: 8, s: '', label: 'real projects' },
       { n: 2, s: '', label: 'systems in production' },
