@@ -16,17 +16,27 @@ import Contact from './components/Contact.jsx'
 
 const read = (k, fallback) => { try { return localStorage.getItem(k) || fallback } catch { return fallback } }
 const save = (k, v) => { try { localStorage.setItem(k, v) } catch { /* private mode */ } }
+const THEME_COLOR = { dark: '#0a0a0b', light: '#f2eee7' }
+// Same order as public/theme.js: saved choice, otherwise the OS preference.
+const initialTheme = () => {
+  const stored = read('theme', '')
+  if (stored === 'light' || stored === 'dark') return stored
+  if (typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: light)').matches) return 'light'
+  return 'dark'
+}
 
 export default function App() {
-  const [theme, setTheme] = useState(() => read('theme', 'dark'))
+  const [theme, setTheme] = useState(initialTheme)
   const [loaded, setLoaded] = useState(false)
   const lenis = useRef(null)
   const t = content
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme
-    save('theme', theme)
+    document.querySelectorAll('meta[name="theme-color"]').forEach((m) => m.setAttribute('content', THEME_COLOR[theme]))
   }, [theme])
+  // persist only an explicit choice, so first-time visitors keep following the OS setting
+  const chooseTheme = (v) => { setTheme(v); save('theme', v) }
 
   useEffect(() => {
     if (reducedMotion()) return
@@ -72,7 +82,7 @@ export default function App() {
       <Preloader label={t.loading} name={t.name} onDone={() => setLoaded(true)} />
       <Cursor />
       <div className="grain" aria-hidden="true" />
-      <Header t={t} theme={theme} setTheme={setTheme} go={go} />
+      <Header t={t} theme={theme} setTheme={chooseTheme} go={go} />
       <main>
         <Hero t={t.hero} name={t.name} ready={loaded} go={go} />
         <Marquee />
