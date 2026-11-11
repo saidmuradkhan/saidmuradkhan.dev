@@ -1,11 +1,29 @@
 import { useEffect, useState } from 'react'
 import { reducedMotion } from '../hooks.jsx'
 
+const KEY = 'pl-seen'
+let decided
+function seenBefore() {
+  if (decided !== undefined) return decided
+  decided = false
+  if (typeof window === 'undefined') return decided
+  try {
+    decided = !!window.sessionStorage.getItem(KEY)
+    window.sessionStorage.setItem(KEY, '1')
+  } catch { /* storage blocked: treat as first visit */ }
+  return decided
+}
+
 export default function Preloader({ label, name, onDone }) {
   const [n, setN] = useState(0)
   const [phase, setPhase] = useState('count')
 
   useEffect(() => {
+    if (seenBefore()) {
+      onDone()
+      setPhase('gone')
+      return
+    }
     const dur = reducedMotion() ? 1 : 1500
     const start = performance.now()
     let raf, doneTimer
