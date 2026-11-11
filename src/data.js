@@ -229,6 +229,7 @@ export const content = {
     items: [
       { when: '2024 — Now', what: 'Computer Science', where: 'Khazar University', note: 'Bachelor\'s (EQF 6)' },
       { when: '2025 — Now', what: 'Full Stack Web Development', where: 'Div Academy', note: 'React, Tailwind CSS, Node.js/Express, REST API design · Grade: 98/100' },
+      { when: '2026 — Now', what: 'Mechatronics, Robotics, Automation & Artificial Intelligence', where: 'Defence Industry Research & Innovation Center (MSTİM)', note: 'Bachelor of Engineering · Engineer Training & Defence Industry Ecosystem Development Program' },
     ],
   },
   contact: {

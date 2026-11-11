@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { links, cvs } from '../data.js'
 
 function BakuClock() {
@@ -9,11 +9,15 @@ function BakuClock() {
 }
 
 export default function Contact({ t, name, go }) {
-  const [copied, setCopied] = useState(false)
+  const [copied, setCopied] = useState(null) // null | 'ok' | 'fail'
+  const timer = useRef(0)
+  useEffect(() => () => clearTimeout(timer.current), [])
   const copy = async () => {
-    try { await navigator.clipboard.writeText(links.email) } catch { /* clipboard blocked */ }
-    setCopied(true)
-    setTimeout(() => setCopied(false), 1800)
+    let ok = true
+    try { await navigator.clipboard.writeText(links.email) } catch { ok = false }
+    setCopied(ok ? 'ok' : 'fail')
+    clearTimeout(timer.current)
+    timer.current = setTimeout(() => setCopied(null), ok ? 1800 : 4000)
   }
 
   const socials = [
@@ -35,7 +39,7 @@ export default function Contact({ t, name, go }) {
 
         <div className="mail-row" data-reveal>
           <a href={`mailto:${links.email}`} className="mail" data-cursor="✉">{links.email}</a>
-          <button className="btn" onClick={copy} data-magnetic>{copied ? t.copied : t.copy}</button>
+          <button className="btn" onClick={copy} aria-live="polite" data-magnetic>{copied === 'ok' ? t.copied : copied === 'fail' ? `Copy failed — ${links.email}` : t.copy}</button>
           <a href={`mailto:${links.email}`} className="btn btn-fill" data-magnetic>{t.send} →</a>
         </div>
 

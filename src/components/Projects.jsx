@@ -10,7 +10,7 @@ function SeatMap({ l }) {
     setSel((s) => { const n = new Set(s); n.has(i) ? n.delete(i) : n.add(i); return n })
   }
   return (
-    <div className="vis seatmap" onClick={(e) => e.stopPropagation()}>
+    <div className="vis seatmap" role="presentation" onClick={(e) => e.stopPropagation()}>
       <div className="stage mono">{l.stage}</div>
       <div className="seats">
         {Array.from({ length: 40 }, (_, i) => (
@@ -36,7 +36,7 @@ function RouteMap({ l }) {
   const [price, setPrice] = useState(18000)
   const ship = Math.round(1450 + price * 0.035)
   return (
-    <div className="vis route" onClick={(e) => e.stopPropagation()}>
+    <div className="vis route" role="presentation" onClick={(e) => e.stopPropagation()}>
       <svg viewBox="0 0 320 150" aria-hidden="true">
         <path id="rt" d="M20 110 C 90 20, 170 20, 200 70 S 280 120, 300 40" className="route-path" />
         <path d="M20 110 C 90 20, 170 20, 200 70 S 280 120, 300 40" className="route-dash" />
@@ -70,7 +70,7 @@ function MiniCart({ l }) {
   const total = items.reduce((sum, it, i) => sum + it.price * qty[i], 0)
   const goal = 1500
   return (
-    <div className="vis minicart" onClick={(e) => e.stopPropagation()}>
+    <div className="vis minicart" role="presentation" onClick={(e) => e.stopPropagation()}>
       <ul>
         {items.map((it, i) => (
           <li key={it.name} className={qty[i] ? '' : 'off'}>
@@ -102,7 +102,7 @@ function Mixer({ l }) {
   const toggle = (i) => setOn((s) => { const n = new Set(s); n.has(i) ? n.delete(i) : n.add(i); return n })
   const layers = ings.filter((_, i) => on.has(i))
   return (
-    <div className="vis mixer" onClick={(e) => e.stopPropagation()}>
+    <div className="vis mixer" role="presentation" onClick={(e) => e.stopPropagation()}>
       <div className="glass" aria-hidden="true">
         {layers.map((g) => (
           <span key={g.name} style={{ height: `${100 / ings.length}%`, background: `color-mix(in srgb, var(--accent) ${g.c}%, var(--bg-3))` }} />

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import SectionHead from './SectionHead.jsx'
 import { Counter } from '../hooks.jsx'
 
@@ -6,22 +6,23 @@ import { Counter } from '../hooks.jsx'
 function ScrollText({ html }) {
   const ref = useRef(null)
   const [lit, setLit] = useState(0)
-  const words = html.split(' ').map((w) => ({ em: /<\/?em>/.test(w), text: w.replace(/<\/?em>/g, '') }))
-  // words between <em> and </em> inherit emphasis
-  let inEm = false
-  words.forEach((w, i) => {
-    const raw = html.split(' ')[i]
-    if (raw.includes('<em>')) inEm = true
-    w.em = inEm
-    if (raw.includes('</em>')) inEm = false
-  })
+  const words = useMemo(() => {
+    // words between <em> and </em> inherit emphasis
+    let inEm = false
+    return html.split(' ').map((raw) => {
+      if (raw.includes('<em>')) inEm = true
+      const w = { em: inEm, text: raw.replace(/<[/]?em>/g, '') }
+      if (raw.includes('</em>')) inEm = false
+      return w
+    })
+  }, [html])
 
   useEffect(() => {
     const onScroll = () => {
       const r = ref.current?.getBoundingClientRect()
       if (!r) return
       const p = (innerHeight * 0.85 - r.top) / (r.height + innerHeight * 0.35)
-      setLit(Math.round(Math.min(Math.max(p, 0), 1) * words.length))
+      setLit(Math.round(Math.min(Math.max(p, 0), 1) * words.length)) // unchanged value: React bails out of the re-render
     }
     onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
@@ -44,8 +45,11 @@ function Terminal({ term, go }) {
   const [hi, setHi] = useState(-1)
   const out = useRef(null)
   const input = useRef(null)
+  const timers = useRef([])
 
-  useEffect(() => { setLines([{ k: 'out', v: term.welcome }]) }, [term])
+  // only reset when the welcome text itself changes (the `term` object identity is not stable)
+  useEffect(() => { setLines([{ k: 'out', v: term.welcome }]) }, [term.welcome])
+  useEffect(() => () => timers.current.forEach(clearTimeout), [])
   useEffect(() => { if (out.current) out.current.scrollTop = out.current.scrollHeight }, [lines])
 
   const run = (raw) => {
@@ -53,13 +57,12 @@ function Terminal({ term, go }) {
     if (!cmd) return
     setHist((h) => [cmd, ...h])
     setHi(-1)
-    if (cmd === 'clear') { setLines([]); return }
-    if (cmd === 'cls') { setLines([]); return }
+    if (cmd === 'clear' || cmd === 'cls') { setLines([]); return }
     const map = { help: term.help, whoami: term.whoami, skills: term.skills, projects: term.projects, contact: term.contact, hire: term.hire, sudo: '🔒 nice try.', ls: 'about.md  work/  projects/  cv.pdf' }
     const reply = map[cmd] ?? term.unknown + cmd
     setLines((l) => [...l, { k: 'in', v: raw }, { k: cmd in map ? 'out' : 'err', v: reply }])
-    if (cmd === 'hire') setTimeout(() => go('contact'), 900)
-    if (cmd === 'projects') setTimeout(() => go('projects'), 1200)
+    if (cmd === 'hire') timers.current.push(setTimeout(() => go('contact'), 900))
+    if (cmd === 'projects') timers.current.push(setTimeout(() => go('projects'), 1200))
   }
 
   const onKey = (e) => {
@@ -77,9 +80,11 @@ function Terminal({ term, go }) {
         <span className="mono">said@portfolio — zsh</span>
       </div>
       <div className="term-body mono" ref={out}>
-        {lines.map((l, i) => (
-          <div key={i} className={`tl ${l.k}`}>{l.k === 'in' ? <><b>❯</b> {l.v}</> : l.v}</div>
-        ))}
+        <div role="log" aria-live="polite" aria-label="Terminal output">
+          {lines.map((l, i) => (
+            <div key={i} className={`tl ${l.k}`}>{l.k === 'in' ? <><b>❯</b> {l.v}</> : l.v}</div>
+          ))}
+        </div>
         <div className="tl in">
           <b>❯</b>
           <input

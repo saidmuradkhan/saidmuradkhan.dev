@@ -28,25 +28,48 @@ const clamp = (v) => Math.max(-MAX_SHIFT, Math.min(MAX_SHIFT, v))
 export function useMagnetic() {
   useEffect(() => {
     if (isTouch()) return
-    const onMove = (e) => {
-      document.querySelectorAll('[data-magnetic]').forEach((el) => {
+    let els = []
+    let dirty = true // re-query only after the DOM changed, not on every pointermove
+    const mo = new MutationObserver(() => { dirty = true })
+    mo.observe(document.body, { childList: true, subtree: true })
+    let last = null
+    let raf = 0
+
+    const frame = () => {
+      raf = 0
+      if (!last) return
+      if (dirty) { els = [...document.querySelectorAll('[data-magnetic]')]; dirty = false }
+      const { clientX, clientY } = last
+      // read every rect first, write styles afterwards (no layout thrashing)
+      const hits = els.map((el) => {
         // measure the resting position, not the already-shifted one
         const r = el.getBoundingClientRect()
         const left = r.left - (+el.dataset.mx || 0)
         const top = r.top - (+el.dataset.my || 0)
-        const inside = e.clientX >= left && e.clientX <= left + r.width && e.clientY >= top && e.clientY <= top + r.height
+        const inside = clientX >= left && clientX <= left + r.width && clientY >= top && clientY <= top + r.height
+        return { el, r, left, top, inside }
+      })
+      hits.forEach(({ el, r, left, top, inside }) => {
         if (!inside) {
           if (el.dataset.mx) { el.style.transform = ''; delete el.dataset.mx; delete el.dataset.my }
           return
         }
-        const x = clamp(((e.clientX - left) / r.width - 0.5) * 2 * MAX_SHIFT)
-        const y = clamp(((e.clientY - top) / r.height - 0.5) * 2 * MAX_SHIFT)
+        const x = clamp(((clientX - left) / r.width - 0.5) * 2 * MAX_SHIFT)
+        const y = clamp(((clientY - top) / r.height - 0.5) * 2 * MAX_SHIFT)
         el.dataset.mx = x; el.dataset.my = y
         el.style.transform = `translate(${x}px, ${y}px)`
       })
     }
-    window.addEventListener('pointermove', onMove)
-    return () => window.removeEventListener('pointermove', onMove)
+    const onMove = (e) => {
+      last = e
+      if (!raf) raf = requestAnimationFrame(frame)
+    }
+    window.addEventListener('pointermove', onMove, { passive: true })
+    return () => {
+      window.removeEventListener('pointermove', onMove)
+      mo.disconnect()
+      cancelAnimationFrame(raf)
+    }
   }, [])
 }
 

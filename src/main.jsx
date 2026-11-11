@@ -2,6 +2,7 @@ import { Component, StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App.jsx'
 import NotFound from './components/NotFound.jsx'
+import './fonts.css'
 import './styles.css'
 
 class ErrorBoundary extends Component {
@@ -22,8 +23,10 @@ class ErrorBoundary extends Component {
 
 if ('scrollRestoration' in history) history.scrollRestoration = 'manual'
 
-const isHome = ['/', '/index.html'].includes(window.location.pathname)
+const path = window.location.pathname.replace(/[/]index[.]html$/, '/').replace(/[/]+$/, '') || '/'
+const isHome = path === '/'
 
+// index.html is prerendered (SSR) for crawlers only; the client discards it and re-renders from scratch.
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <ErrorBoundary>

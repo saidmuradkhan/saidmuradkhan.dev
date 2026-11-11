@@ -1,16 +1,25 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
 import { cvs } from '../data.js'
 
 // Split button: the main part downloads the default (Full-Stack) CV, the arrow opens the other versions.
 export default function CvMenu({ t }) {
   const [open, setOpen] = useState(false)
   const ref = useRef(null)
+  const toggleRef = useRef(null)
+  const viaKeyboard = useRef(false)
+  const menuId = useId()
   const [main] = cvs
+
+  // disclosure opened from the keyboard: move focus to the first link
+  useEffect(() => {
+    if (open && viaKeyboard.current) ref.current?.querySelector('.cv-item')?.focus()
+    viaKeyboard.current = false
+  }, [open])
 
   useEffect(() => {
     if (!open) return
     const onDown = (e) => { if (!ref.current?.contains(e.target)) setOpen(false) }
-    const onKey = (e) => { if (e.key === 'Escape') setOpen(false) }
+    const onKey = (e) => { if (e.key === 'Escape') { setOpen(false); toggleRef.current?.focus() } }
     document.addEventListener('pointerdown', onDown)
     document.addEventListener('keydown', onKey)
     return () => { document.removeEventListener('pointerdown', onDown); document.removeEventListener('keydown', onKey) }
@@ -19,14 +28,15 @@ export default function CvMenu({ t }) {
   return (
     <div className={`cv-split ${open ? 'open' : ''}`} ref={ref}>
       <a href={main.file} className="btn cv-main" download>{t.ctaCv} <span aria-hidden="true">↓</span></a>
-      <button type="button" className="btn cv-toggle" aria-label={t.cvMenu} aria-haspopup="menu" aria-expanded={open} onClick={() => setOpen((v) => !v)}>
+      <button ref={toggleRef} type="button" className="btn cv-toggle" aria-label={t.cvMenu} aria-expanded={open} aria-controls={menuId}
+        onClick={(e) => { viaKeyboard.current = e.detail === 0; setOpen((v) => !v) }}>
         <svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg>
       </button>
       {open && (
-        <div className="cv-menu" role="menu">
+        <div className="cv-menu" id={menuId}>
           <p className="cv-menu-head mono">{t.cvPick}</p>
           {cvs.map((cv) => (
-            <a key={cv.key} href={cv.file} download role="menuitem" className="cv-item" onClick={() => setOpen(false)}>
+            <a key={cv.key} href={cv.file} download className="cv-item" onClick={() => setOpen(false)}>
               <span>{cv.label}</span>
               <span className="mono">{cv.note || 'PDF'} ↓</span>
             </a>

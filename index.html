@@ -9,7 +9,8 @@
     <meta name="robots" content="index, follow, max-image-preview:large" />
     <meta name="google-site-verification" content="l3_mUrk9alepjFHuD-ywNVyfdcawUcn4eHHVRx3EABY" />
     <meta name="msvalidate.01" content="988FA3625EB0F03CCC351824AE949919" />
-    <meta name="theme-color" content="#0a0a0b" />
+    <meta name="theme-color" content="#0a0a0b" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f2eee7" media="(prefers-color-scheme: light)" />
     <link rel="canonical" href="%VITE_SITE_URL%/" />
     <meta property="og:type" content="profile" />
     <meta property="og:site_name" content="Said Muradkhan" />
@@ -43,7 +44,11 @@
             "image": "%VITE_SITE_URL%/og-image.jpg?v=2",
             "jobTitle": "Full-Stack Developer",
             "worksFor": { "@type": "Organization", "name": "Leops" },
-            "alumniOf": { "@type": "CollegeOrUniversity", "name": "Khazar University" },
+            "alumniOf": [
+              { "@type": "CollegeOrUniversity", "name": "Khazar University" },
+              { "@type": "EducationalOrganization", "name": "Div Academy" },
+              { "@type": "ResearchOrganization", "name": "Defence Industry Research and Innovation Center (MSTİM)", "alternateName": ["MSTİM", "MSTIM", "Müdafiə Sənayesi Tədqiqat və İnnovasiya Mərkəzi"] }
+            ],
             "address": { "@type": "PostalAddress", "addressLocality": "Baku", "addressCountry": "AZ" },
             "email": "mailto:saidmuradkhan414@gmail.com",
             "knowsAbout": ["PHP", "Laravel", "React", "JavaScript", "Python", "Django", "FastAPI", "Go", "Node.js", "MySQL", "PostgreSQL", "Docker"],
@@ -64,9 +69,9 @@
         ]
       }
     </script>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/bricolage-grotesque-latin.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/inter-latin.woff2" crossorigin />
+    <link rel="preload" as="image" href="/said-portrait.webp" fetchpriority="high" />
     <script src="/theme.js"></script>
     <style>
       html, body { margin: 0; background: #0a0a0b; }

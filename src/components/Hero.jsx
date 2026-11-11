@@ -3,21 +3,25 @@ import DotField from './DotField.jsx'
 import Portrait from './Portrait.jsx'
 import CvMenu from './CvMenu.jsx'
 import { links } from '../data.js'
+import { reducedMotion } from '../hooks.jsx'
 
 function Typer({ words }) {
   const [i, setI] = useState(0)
   const [text, setText] = useState('')
   const [del, setDel] = useState(false)
+  const still = reducedMotion()
 
   useEffect(() => {
+    if (still) return
     const word = words[i % words.length]
     let id
     if (!del && text === word) id = setTimeout(() => setDel(true), 1800)
     else if (del && text === '') { setDel(false); setI((v) => v + 1) }
     else id = setTimeout(() => setText(del ? word.slice(0, text.length - 1) : word.slice(0, text.length + 1)), del ? 35 : 70)
     return () => clearTimeout(id)
-  }, [text, del, i, words])
+  }, [text, del, i, words, still])
 
+  if (still) return <span className="typer">{words[0]}</span>
   return <span className="typer">{text}<i className="caret" /></span>
 }
 
@@ -46,7 +50,7 @@ export default function Hero({ t, name, ready, go }) {
           <p className="hero-role"><span className="mono">&gt;</span> <Typer words={t.roles} /></p>
           <p className="hero-lead">{t.lead}</p>
           <div className="hero-cta">
-            <a href="#projects" className="btn btn-fill" data-magnetic onClick={(e) => { e.preventDefault(); go('projects') }}>
+            <a href="#projects" className="btn" data-magnetic onClick={(e) => { e.preventDefault(); go('projects') }}>
               {t.ctaWork} <span aria-hidden="true">→</span>
             </a>
             <CvMenu t={t} />
@@ -73,7 +77,7 @@ export default function Hero({ t, name, ready, go }) {
         </div>
       </div>
       <div className="wrap hero-foot mono">
-        <span className="avail"><i /> {t.available}</span>
+        <a href="#contact" className="avail" onClick={(e) => { e.preventDefault(); go('contact') }}><i /> {t.available}</a>
         <span className="coords">40.3777° N, 49.892° E</span>
         <button className="scroll-hint" onClick={() => go('about')}>{t.scroll} <span className="arrow">↓</span></button>
       </div>
