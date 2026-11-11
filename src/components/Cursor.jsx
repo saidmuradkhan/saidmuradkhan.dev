@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { isTouch } from '../hooks.jsx'
+import { isTouch, reducedMotion } from '../hooks.jsx'
 
 export default function Cursor() {
   const dot = useRef(null)
@@ -8,7 +8,7 @@ export default function Cursor() {
   const [hover, setHover] = useState(false)
 
   useEffect(() => {
-    if (isTouch()) return
+    if (isTouch() || reducedMotion()) return
     document.documentElement.classList.add('has-cursor')
     const pos = { x: innerWidth / 2, y: innerHeight / 2 }
     const lag = { ...pos }
@@ -16,6 +16,7 @@ export default function Cursor() {
     const move = (e) => {
       pos.x = e.clientX; pos.y = e.clientY
       const target = e.target.closest?.('a, button, [data-cursor], input')
+      document.documentElement.classList.toggle('cursor-native', !!e.target.closest?.('input, textarea, [contenteditable], .terminal'))
       setHover(!!target)
       setLabel(target?.dataset?.cursor || '')
     }
@@ -37,11 +38,11 @@ export default function Cursor() {
       window.removeEventListener('pointermove', move)
       document.removeEventListener('mouseleave', hide)
       document.removeEventListener('mouseenter', show)
-      document.documentElement.classList.remove('has-cursor')
+      document.documentElement.classList.remove('has-cursor', 'cursor-native')
     }
   }, [])
 
-  if (isTouch()) return null
+  if (isTouch() || reducedMotion()) return null
   return (
     <>
       <div ref={dot} className="cursor-dot" aria-hidden="true" />
