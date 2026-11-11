@@ -31,7 +31,7 @@ export const skillGroups = [
 ]
 
 export const content = {
-  name: { first: 'Said', last: 'Muradkhan' },
+  name: { first: 'Said', last: 'Muradkhan', az: 'Səid Muradxan' },
   nav: { about: 'About', work: 'Experience', projects: 'Projects', skills: 'Skills', contact: 'Contact' },
   loading: 'Loading',
   hero: {
