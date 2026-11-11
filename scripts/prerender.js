@@ -17,12 +17,16 @@ try {
 }
 
 await writeFile(new URL('robots.txt', dist), `User-agent: *\nAllow: /\n\nSitemap: ${site}/sitemap.xml\n`)
+// The home page plus every CV variant, so the PDFs can show up in search on their own.
+const today = new Date().toISOString().slice(0, 10)
+const { cvs } = await import('../src/data.js')
+const urls = ['/', ...cvs.map((cv) => cv.file)]
 await writeFile(new URL('sitemap.xml', dist), `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>${site}/</loc>
-    <lastmod>${new Date().toISOString().slice(0, 10)}</lastmod>
-  </url>
+${urls.map((u) => `  <url>
+    <loc>${site}${u}</loc>
+    <lastmod>${today}</lastmod>
+  </url>`).join('\n')}
 </urlset>
 `)
 
