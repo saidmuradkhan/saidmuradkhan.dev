@@ -23,8 +23,10 @@ class ErrorBoundary extends Component {
 
 if ('scrollRestoration' in history) history.scrollRestoration = 'manual'
 
-const isHome = ['/', '/index.html'].includes(window.location.pathname)
+const path = window.location.pathname.replace(/[/]index[.]html$/, '/').replace(/[/]+$/, '') || '/'
+const isHome = path === '/'
 
+// index.html is prerendered (SSR) for crawlers only; the client discards it and re-renders from scratch.
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <ErrorBoundary>
