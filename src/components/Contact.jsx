@@ -59,7 +59,7 @@ export default function Contact({ t, name, go }) {
         </p>
 
         <div className="foot mono">
-          <span>© {new Date().getFullYear()} {name.first} {name.last}</span>
+          <span>© {new Date().getFullYear()} {name.first} {name.last} <span lang="az">· {name.az}</span></span>
           <span>{t.local}: <BakuClock /></span>
           <span className="hide-sm">{t.built}</span>
           <button onClick={() => go('top')} className="to-top">{t.top} ↑</button>
