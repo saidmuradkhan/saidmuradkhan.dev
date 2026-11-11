@@ -70,6 +70,10 @@
         {
           "key": "Cache-Control",
           "value": "public, max-age=3600, must-revalidate"
+        },
+        {
+          "key": "Link",
+          "value": "<https://saidmuradkhan.dev/cv/Said_Muradkhan_CV_FullStack.pdf>; rel=\"canonical\""
         }
       ]
     },
