@@ -32,7 +32,8 @@ export default function Contact({ t, name, go }) {
       <div className="wrap">
         <p className="mono sec-index" data-reveal>({t.index}) — {t.kicker}</p>
         <h2 className="contact-title" data-reveal>
-          <span>{t.title1}</span>
+          {/* the space keeps the text "Let's build something." for screen readers and snippets; flex drops it visually */}
+          <span>{t.title1}</span>{' '}
           <span className="accent-text">{t.title2}</span>
         </h2>
         <p className="contact-text" data-reveal>{t.text}</p>
