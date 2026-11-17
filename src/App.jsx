@@ -77,13 +77,21 @@ export default function App() {
   useReveal([loaded])
   useMagnetic()
 
+  // Move focus past the header nav; Lenis owns the scroll, so the jump goes through go().
+  const skipToMain = (e) => {
+    e.preventDefault()
+    document.getElementById('main')?.focus({ preventScroll: true })
+    go('main', { instant: true })
+  }
+
   return (
     <>
+      <a href="#main" className="skip-link" onClick={skipToMain}>{t.skip}</a>
       <Preloader label={t.loading} name={t.name} onDone={() => setLoaded(true)} />
       <Cursor />
       <div className="grain" aria-hidden="true" />
       <Header t={t} theme={theme} setTheme={chooseTheme} go={go} />
-      <main>
+      <main id="main" tabIndex={-1}>
         <Hero t={t.hero} name={t.name} ready={loaded} go={go} />
         <Marquee />
         <About t={t.about} term={t.term} go={go} />

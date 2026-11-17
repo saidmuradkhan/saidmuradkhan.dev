@@ -34,6 +34,7 @@ export const content = {
   name: { first: 'Said', last: 'Muradkhan', az: 'Səid Muradxan' },
   nav: { about: 'About', work: 'Experience', projects: 'Projects', skills: 'Skills', contact: 'Contact' },
   loading: 'Loading',
+  skip: 'Skip to content',
   hero: {
     eyebrow: 'Full-Stack Developer · Baku',
     roles: ['Full-Stack Developer', 'Laravel & React', 'Python & Django', 'Go services'],
