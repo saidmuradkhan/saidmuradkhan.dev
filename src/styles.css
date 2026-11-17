@@ -60,6 +60,16 @@ p { margin: 0; }
 .wrap { width: 100%; max-width: 1320px; margin: 0 auto; padding: 0 var(--pad); }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 .dock a.on:focus-visible { outline-color: var(--fg); outline-offset: -3px; }
+/* hidden above the viewport until a keyboard user tabs onto it */
+.skip-link {
+  position: fixed; top: 12px; left: 12px; z-index: 310;
+  padding: 12px 18px; border-radius: 999px;
+  background: var(--accent); color: var(--accent-ink);
+  font-family: var(--mono); font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase;
+  transform: translateY(calc(-100% - 24px));
+}
+.skip-link:focus { transform: none; outline-color: var(--fg); }
+main:focus { outline: none; }
 
 .grain {
   position: fixed; inset: -50%; z-index: 90; pointer-events: none; opacity: 0.05;
